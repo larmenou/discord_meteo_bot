@@ -83,7 +83,7 @@ function splitText(text, maxLength = 2000) {
 
 // Fonction pour envoyer des notifications de vigilance
 function sendVigilanceNotifications(message) {
-    const channelId = '770010282461888556'; // Remplacez par l'ID du canal où envoyer les notifications
+    const channelId = '1280039808596447283'; // Remplacez par l'ID du canal où envoyer les notifications
     const channel = client.channels.cache.get(channelId);
 
     if (channel) {
@@ -263,7 +263,7 @@ function downloadRisk(access_token, retries = 0, maxRetries = 10) {
 }
 
 console.log("Début du cron.");
-cron.schedule('* * * * *', () => {
+cron.schedule('*/30 * * * *', () => {
     generate_token((err, access_token) => {
         if (err) {
             console.error("Erreur pendant la génération de token.");
