@@ -120,6 +120,9 @@ function alerteDep(dict)
 function extractDepTexts(data, dict) {
     const depTexts = [];
 
+    if (!data)
+        return depTexts;
+
     data.product.text_bloc_items.forEach(item => {
         if (item.bloc_id === 'BULLETIN_DEPARTEMENTAL' && dict.hasOwnProperty(item.domain_id)) {
             item.bloc_items.forEach(blocItem => {
@@ -165,7 +168,7 @@ function extractDepVig(data) {
     return maxColorIds;
 }
 
-function downloadText(access_token, dict, message, retries = 0, maxRetries = 10) {
+function downloadText(access_token, dict, message, retries = 0) {
     return new Promise((resolve, reject) => {
         console.log("Début de la tentative de téléchargement du texte");
 
@@ -176,10 +179,10 @@ function downloadText(access_token, dict, message, retries = 0, maxRetries = 10)
             -o 'vigilance_data.json'`, (err, stdout, stderr) => {
             if (err) {
                 console.log(err.code);
-                if (err.code === 56 && retries < maxRetries) {
-                    console.log(`Erreur 56 détectée. Tentative ${retries + 1}/${maxRetries}`);
+                if (err.code === 56) {
+                    console.log(`Erreur 56 détectée. Tentative ${retries + 1}`);
                     setTimeout(() => {
-                        downloadText(access_token, dict, message, retries + 1, maxRetries).then(resolve).catch(reject);
+                        downloadText(access_token, dict, message, retries + 1).then(resolve).catch(reject);
                     }, 5000); // Délai de 5 secondes entre les tentatives
                 } else if (err.code === 404) {
                     reject(err);
@@ -208,7 +211,7 @@ function downloadText(access_token, dict, message, retries = 0, maxRetries = 10)
 }
 
 
-function downloadRisk(access_token, retries = 0, maxRetries = 10) {
+function downloadRisk(access_token, retries = 0) {
     return new Promise((resolve, reject) => {
         console.log("Début de la tentative de téléchargement du json");
 
@@ -219,10 +222,10 @@ function downloadRisk(access_token, retries = 0, maxRetries = 10) {
             -o 'vigilanceCarte_data.json'`, (err, stdout, stderr) => {
             if (err) {
                 console.log(err.code);
-                if (err.code === 56 && retries < maxRetries) {
-                    console.log(`Erreur 56 détectée. Tentative ${retries + 1}/${maxRetries}`);
+                if (err.code === 56) {
+                    console.log(`Erreur 56 détectée. Tentative ${retries + 1}`);
                     setTimeout(() => {
-                        downloadRisk(access_token, retries + 1, maxRetries).then(resolve).catch(reject);
+                        downloadRisk(access_token, retries + 1).then(resolve).catch(reject);
                     }, 5000); // Délai de 5 secondes entre les tentatives
                 } else if (err.code === 404) {
                     reject(err);

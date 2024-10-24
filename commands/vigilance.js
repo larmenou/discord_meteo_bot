@@ -13,7 +13,7 @@ function splitText(text, maxLength = 2000) {
 }
 
 // Fonction pour télécharger l'image de vigilance
-function downloadImage(access_token, interaction, retries = 0, maxRetries = 5) {
+function downloadImage(access_token, interaction, retries = 0) {
     return new Promise((resolve, reject) => {
         console.log("Début de la tentative de téléchargement de l'image");
 
@@ -24,10 +24,10 @@ function downloadImage(access_token, interaction, retries = 0, maxRetries = 5) {
             -o 'vigilance_data.png'`, (err, stdout, stderr) => {
             if (err) {
                 console.log(err.code);
-                if (err.code === 56 && retries < maxRetries) {
-                    console.log(`Erreur 56 détectée. Tentative ${retries + 1}/${maxRetries}`);
+                if (err.code === 56) {
+                    console.log(`Erreur 56 détectée. Tentative ${retries + 1}`);
                     setTimeout(() => {
-                        downloadImage(access_token, interaction, retries + 1, maxRetries).then(resolve).catch(reject);
+                        downloadImage(access_token, interaction, retries + 1).then(resolve).catch(reject);
                     }, 5000); // Délai de 5 secondes entre les tentatives
                 } else {
                     interaction.editReply("Erreur pendant le chargement de l'image.");
@@ -85,7 +85,7 @@ function extractTextFromPeriods(data) {
 }
 
 // Fonction pour télécharger et traiter les textes de vigilance
-function downloadText(access_token, interaction, retries = 0, maxRetries = 10) {
+function downloadText(access_token, interaction, retries = 0) {
     return new Promise((resolve, reject) => {
         console.log("Début de la tentative de téléchargement du texte");
 
@@ -98,10 +98,10 @@ function downloadText(access_token, interaction, retries = 0, maxRetries = 10) {
             -o 'vigilance_data.json'`, (err, stdout, stderr) => {
             if (err) {
                 console.log(err.code);
-                if (err.code === 56 && retries < maxRetries) {
-                    console.log(`Erreur 56 détectée. Tentative ${retries + 1}/${maxRetries}`);
+                if (err.code === 56) {
+                    console.log(`Erreur 56 détectée. Tentative ${retries + 1}`);
                     setTimeout(() => {
-                        downloadText(access_token, interaction, retries + 1, maxRetries).then(resolve).catch(reject);
+                        downloadText(access_token, interaction, retries + 1).then(resolve).catch(reject);
                     }, 5000); // Délai de 5 secondes entre les tentatives
                 } else if (err.code === 404) {
                     interaction.editReply("Pas de vigilance en cours.");
@@ -131,10 +131,10 @@ function downloadText(access_token, interaction, retries = 0, maxRetries = 10) {
                     -o 'vigilanceCarte_data.json'`, (err, stdout, stderr) => {
                     if (err) {
                         console.log(err.code);
-                        if (err.code === 56 && retries < maxRetries) {
-                            console.log(`Erreur 56 détectée. Tentative ${retries + 1}/${maxRetries}`);
+                        if (err.code === 56) {
+                            console.log(`Erreur 56 détectée. Tentative ${retries + 1}`);
                             setTimeout(() => {
-                                downloadText(access_token, interaction, retries + 1, maxRetries).then(resolve).catch(reject);
+                                downloadText(access_token, interaction, retries + 1).then(resolve).catch(reject);
                             }, 5000); // Délai de 5 secondes entre les tentatives
                         } else if (err.code === 404) {
                             interaction.editReply("Pas de vigilance en cours.");
